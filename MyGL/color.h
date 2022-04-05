@@ -13,10 +13,10 @@ struct  Color
 	Color(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
 	{
 		unsigned char zero = 0;
-		red		= max(zero, red);
-		green	= max(zero, green);
-		blue	= max(zero, blue);
-		alpha	= max(zero, alpha);
+		red		= glm::max(zero, red);
+		green	= glm::max(zero, green);
+		blue	= glm::max(zero, blue);
+		alpha	= glm::max(zero, alpha);
 		r = red <= 1	? red	: red / 255;
 		g = green <= 1	? green : green / 255;
 		b = blue <= 1	? blue	: blue / 255;

@@ -133,8 +133,7 @@ int Texture::SaveToBMPFile(const char* filePath)
 	return stbi_write_bmp(filePath, this->width, this->height, this->numChannels, this->data);
 }
 
-
-Texture* LoadTextureFromFile(const char* filePath)
+Texture* Texture::LoadTexture(const char* filePath)
 {
 	int width = 0;
 	int height = 0;

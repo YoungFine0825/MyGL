@@ -22,12 +22,11 @@ public:
 	void SetPixel(int x, int y, Color color);
 	Color GetPixel(int x, int y);
 	int SaveToBMPFile(const char* filePath);
+	//
+	static Texture* LoadTexture(const char* filePath);
 private:
 	int CalcuPixelStartIndex(int x, int y);
 };
-
-
-extern Texture* LoadTextureFromFile(const char* filePath);
 
 #endif // !_TEXTURE_H_
 
