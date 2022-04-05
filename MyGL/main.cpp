@@ -36,9 +36,6 @@ void PrintSceneNodes(SceneNode *node,int layer)
 		printf("  ");
 	}
 	printf(node->name.c_str());
-	Matrix4x4 localToWorld = node->GetWorldToLocalMatrix();
-	Vector4 worldPos = localToWorld * VEC4_POINT;
-	printf("  worldPos = x=%f y=%f z=%f", worldPos.x, worldPos.y, worldPos.z);
 	printf("\n");
 	size_t childrenNum = node->children.size();
 	if (childrenNum > 0)
@@ -50,18 +47,40 @@ void PrintSceneNodes(SceneNode *node,int layer)
 	}
 }
 
-void TestSceneLoading() 
+void TestScene() 
 {
 	Scene* scene = Scene::LoadSceneFormFile("res/test.blend");
 	if (scene != nullptr) 
 	{
-		PrintSceneNodes(scene->root,0);
+		printf("Scene Hierarchy: \n");
+		PrintSceneNodes(scene->root,1);
+		//
+		printf("**测试SceneNode的空间变换矩阵 \n");
+		SceneNode* cubeNode = scene->root->GetChildWithName("Cube");
+		SceneNode* lightNode = scene->root->GetChildWithName("Light");
+		if (cubeNode != nullptr && lightNode != nullptr)
+		{
+			Vector4 cubeWorldPos = cubeNode->GetLocalToWorldMatrix() * VEC4_POINT;
+			//取世界坐标到Cube局部空间的矩阵
+			Matrix4x4 worldToCubeLocal = cubeNode->GetWorldToLocalMatrix();
+			//根据Light节点的世界矩阵算出Light节点的世界坐标
+			Vector4 lightWorldPos = lightNode->GetLocalToWorldMatrix() * VEC4_POINT;
+			//根据Cube的局部空间矩阵算出Light节点在Cube局部空间下的坐标
+			Vector4 localPosInCube = worldToCubeLocal * lightWorldPos;
+			//
+			printf("  Cube Position In World Space = x=%f y=%f z=%f", cubeWorldPos.x, cubeWorldPos.y, cubeWorldPos.z);
+			printf("\n");
+			printf("  Light Position In World Space = x=%f y=%f z=%f", lightWorldPos.x, lightWorldPos.y, lightWorldPos.z);
+			printf("\n");
+			printf("  Light Position In Cube Node Space = x=%f y=%f z=%f", localPosInCube.x, localPosInCube.y, localPosInCube.z);
+			printf("\n");
+		}
 	}
 }
 
 int main() 
 {
 	//TestTexture();
-	TestSceneLoading();
+	TestScene();
 	return 0;
 }
